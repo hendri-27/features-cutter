@@ -1,47 +1,38 @@
-import { Button } from "@/components/ui/button";
-import { Textarea } from "./components/ui/textarea";
+import useFeatureCutter from "@/hooks/useFeatureCutter";
+import { useState } from "react";
+import { AppBody } from "@/components/AppBody";
+import { AppFooter } from "@/components/AppFooter";
+import { Toaster } from "@/components/ui/sonner";
 
 function App() {
+  const { onAnalyzePrompt, result, loading } = useFeatureCutter();
+  const [productIdea, setProductIdea] = useState("");
+  const [plannedFeatures, setPlannedFeatures] = useState("");
+
   return (
-    <div className="flex h-screen flex-col">
-      <header className="flex flex-col items-center border-b">
-        <div className="w-4/5 max-w-250 p-3">
-          <h1 className="text-3xl font-bold">Features Cutter AI</h1>
-        </div>
-      </header>
-      <div className="flex flex-1 flex-col items-center">
-        <div className="flex w-4/5 max-w-250 flex-1 flex-col p-3">
-          <div className="flex flex-1 flex-col items-center justify-center">
-            <div className="flex w-100 flex-col gap-5 text-center">
-              <h2 className="text-2xl font-bold">
-                What are you building today?
-              </h2>
-              <p>
-                Describe your product idea below and planned features. We will
-                help you identify which features are essential for your MVP and
-                which can wait until later
-              </p>
-            </div>
+    <>
+      <div>
+        <header className="bg-background fixed top-0 right-0 left-0 flex flex-col items-center border-b">
+          <div className="p-3 md:w-4/5 md:max-w-250">
+            <h1 className="text-3xl font-bold">Features Cutter AI</h1>
+          </div>
+        </header>
+        <div className="mt-15 mb-84 flex min-h-[calc(100dvh-26rem)] flex-col items-center md:mb-48 md:min-h-[calc(100dvh-16rem)]">
+          <div className="flex flex-1 flex-col p-6 md:w-4/5 md:max-w-250 md:p-3">
+            <AppBody result={result} loading={loading} />
           </div>
         </div>
-        <div className="relative bottom-0 flex w-4/5 max-w-250 flex-col gap-4 p-3 pb-7">
-          <div className="flex items-end gap-2">
-            <div className="flex flex-1 flex-col">
-              <p className="mb-2">Product Idea</p>
-              <Textarea placeholder="Tell me what your product idea..." />
-            </div>
-            <div className="flex flex-1 flex-col">
-              <p className="mb-2">Planned Features</p>
-              <Textarea placeholder="Tell me what your planned features..." />
-            </div>
-            <Button>Analyze</Button>
-          </div>
-          <div className="flex justify-center">
-            <Button variant={"outline"}>Try Example: Fitness App</Button>
-          </div>
-        </div>
+        <AppFooter
+          productIdea={productIdea}
+          setProductIdea={setProductIdea}
+          plannedFeatures={plannedFeatures}
+          setPlannedFeatures={setPlannedFeatures}
+          onAnalyzePrompt={onAnalyzePrompt}
+          loading={loading}
+        />
       </div>
-    </div>
+      <Toaster position="top-right" richColors={true} closeButton={true} />
+    </>
   );
 }
 

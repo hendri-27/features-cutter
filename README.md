@@ -8,11 +8,12 @@ Features Cutter AI is an MVP scope tool with help of AI Tools. It helps founders
 
 ### How to run it?
 
-1. Install dependencies with `npm install`.
-2. Create `.env` files from `.env.example`.
-3. Create & Copy OpenRouter API Key from [Open Router AI](https://openrouter.ai/workspaces/default/keys).
-4. Set `VITE_OPEN_ROUTER_API_KEY` in your environment with OpenRouter API Key.
-5. Start the app with `npm run dev`.
+1. use node.js version 24.13+
+2. Install dependencies with `npm install`.
+3. Create `.env` files from `.env.example`.
+4. Create & Copy OpenRouter API Key from [Open Router AI](https://openrouter.ai/workspaces/default/keys).
+5. Set `VITE_OPEN_ROUTER_API_KEY` in your environment with OpenRouter API Key.
+6. Start the app with `npm run dev`.
 
 \*nb: Because the model used is free tier, it can be reach limit.
 

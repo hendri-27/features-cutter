@@ -14,6 +14,9 @@ Features Cutter AI is an MVP scope tool with help of AI Tools. It helps founders
 4. Create & Copy OpenRouter API Key from [Open Router AI](https://openrouter.ai/workspaces/default/keys).
 5. Set `VITE_OPEN_ROUTER_API_KEY` in your environment with OpenRouter API Key.
 6. Start the app with `npm run dev`.
+7. If you want to preview the production build, run `npm run build` and then `npm run preview`.
+
+The `dist/` directory is the build output, not an executable app entrypoint, so commands like `npx run dist` will fail.
 
 \*nb: Because the model used is free tier, it can be reach limit.
 

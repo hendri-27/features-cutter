@@ -1,18 +1,13 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { GoogleGenAI } from "@google/genai";
+import { OpenRouter } from "@openrouter/sdk";
 import { SYSTEM_PROMPT } from "@/constants/prompt";
 import type { AnalysisResponse, AnalysisResult } from "@/types/analysis";
 
-type GeminiApiError = {
-  error: {
-    code: number;
-    message: string;
-  };
-};
-
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
-const ai = new GoogleGenAI({ apiKey });
+const apiKey = import.meta.env.VITE_OPEN_ROUTER_API_KEY || "";
+const ai = new OpenRouter({
+  apiKey,
+});
 
 type UseFeatureCutterReturn = {
   onAnalyzePrompt: (
@@ -53,15 +48,28 @@ export default function useFeatureCutter(): UseFeatureCutterReturn {
         If no planned features are provided, generate the smallest possible MVP from the product idea alone.
       `;
 
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-        config: {
-          systemInstruction: SYSTEM_PROMPT,
+      const response = await ai.chat.send({
+        chatRequest: {
+          model: "openai/gpt-oss-120b:free",
+          models: [
+            "openai/gpt-oss-20b:free",
+            "poolside/laguna-m.1:free",
+            "poolside/laguna-xs.2:free",
+          ],
+          messages: [
+            {
+              role: "system",
+              content: SYSTEM_PROMPT,
+            },
+            {
+              role: "user",
+              content: prompt,
+            },
+          ],
         },
       });
 
-      const rawText = (response.text ?? "")
+      const rawText = (response.choices[0].message.content ?? "")
         .replace(/^```json\s*/i, "")
         .replace(/^```\s*/i, "")
         .replace(/```$/i, "")
@@ -78,15 +86,10 @@ export default function useFeatureCutter(): UseFeatureCutterReturn {
 
       return "success";
     } catch (err: unknown) {
-      const apiError = err as Partial<GeminiApiError> | null;
+      toast.error(
+        "Failed to analyze MVP, rate limit reached. Please try again tomorrow.",
+      );
 
-      if (apiError?.error?.code === 503) {
-        toast.error(
-          "Gemini is currently experiencing high demand. Please try again.",
-        );
-      } else {
-        toast.error("Failed to analyze MVP. Please try again.");
-      }
       console.error(err);
       return "failed";
     } finally {
